@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace Excecoes
 {
@@ -29,12 +30,14 @@ namespace Excecoes
 
             // Quando você não trata uma exceção, seu programa quebra, mostrando a linha do erro, a exceção estourada indentificada pelo sistema e uma msg padrão
 
-            // Estrutura Try-catch
+            // Estrutura Try-catch-Finally
             // Try { Execução normal do trecho do codigo que pode acarretar em uma exceção (erro)}
-            // Catch (ExceçãoEspecificada var)
-            // { Codigo a ser executado caso estoure a execução que voce especificou. Podendo conter varios catch, um para cada exceção especifica }
+            // Catch (ExceçãoEspecificada var) {
+            // Codigo a ser executado caso estoure a execução que voce especificou. Podendo conter varios catch, um para cada exceção especifica }
+            // Finally {Finally não é obrigatorio, mas pode ser usado após o catch, para executar outra parte de codigo independentemente de ter ocorrido exceções.
+            // Exemplo: Fechar arquivos ou conexão com banco de dados}
 
-            // Exemplo : trantando exceções da classe pronta .NET SystemException
+            // Exemplo : trantando exceções da classe pronta .NET SystemException (DivideByZeroException)
 
             try
             {
@@ -53,6 +56,28 @@ namespace Excecoes
                 // Se tentar digitar letra ao inves de numero, sendo que o programa espera um int
                 // Mostrei minha msg 'Erro', mas também trouxe a msg padrão desta exceção, usando a variavel 'e'
                 Console.WriteLine("Erro! " + e.Message);
+            }
+
+            // Exemplo 2 : Uso do bloco finally
+
+            FileStream fs = null;
+            try
+            {
+                fs = new FileStream(@"CaminhoDoArq.txt", FileMode.Open);
+                StreamReader sr = new StreamReader(fs);
+                String line = sr.ReadLine();
+                Console.WriteLine(line);
+            }
+            catch (FileNotFoundException e)
+            {
+                Console.WriteLine(e.Message);                
+            }
+            finally
+            {
+                if (fs != null)
+                {
+                    fs.Close();
+                }
             }
         }
     }
