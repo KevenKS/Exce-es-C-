@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Excecoes.Exceptions;
 
 namespace Excecoes
 {
@@ -76,9 +77,51 @@ namespace Excecoes
             {
                 if (fs != null)
                 {
-                    fs.Close();
+                    fs.Close(); // Caso arq esteja aberto, fecha-lo
                 }
             }
+
+
+            // Exemplo 3 : Criando exceções personalizada = ApplicationException
+
+            try
+            {
+                Console.Write("Room number: ");
+                int number = int.Parse(Console.ReadLine());
+                Console.Write("Check-in date (dd/MM/yyyy): ");
+                DateTime checkIn = DateTime.Parse(Console.ReadLine());
+                Console.Write("Check-out date (dd/MM/yyyy): ");
+                DateTime checkOut = DateTime.Parse(Console.ReadLine());
+
+                Reserva reserva = new Reserva(number, checkIn, checkOut);
+                Console.WriteLine("Reservation: " + reserva);
+
+                Console.WriteLine();
+                Console.WriteLine("Enter data to update the reservation:");
+                Console.Write("Check-in date (dd/MM/yyyy): ");
+                checkIn = DateTime.Parse(Console.ReadLine());
+                Console.Write("Check-out date (dd/MM/yyyy): ");
+                checkOut = DateTime.Parse(Console.ReadLine());
+
+                reserva.UpdateDates(checkIn, checkOut);
+                Console.WriteLine("Reservation: " + reserva);
+            }
+            catch (FormatException e)
+            {
+                // Formatação não foi a esperada. Digitou string quando se esperava um int (vice-versa)
+                Console.WriteLine("Error in format: " + e.Message);
+            }
+            catch (DomainException e)
+            {
+                // Exceção personalizada, para verificações no construtor e metodo (UpdateDates) da classe Reserva
+                Console.WriteLine("Error in reservation: " + e.Message);
+            }
+            catch (Exception e)
+            {
+                // Caso você não preveja um erro, ele caira nessa exceção generica, atraves do upcasting
+                Console.WriteLine("Unexpected error: " + e.Message);
+            }
+
         }
     }
 }
